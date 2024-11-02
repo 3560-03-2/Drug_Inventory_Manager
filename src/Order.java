@@ -1,7 +1,7 @@
 public class Order {
     
     private int orderID; // Primary Key
-    private long date; // Idk what type of variable java date time returns so i'll use long for now
+	private Date date;	// Use the Date class of java.util package for date's type
     private int quantity;
     private boolean status;
 

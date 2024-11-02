@@ -1,17 +1,17 @@
 public class Methods {
     
     // use case for logging a sale
-    public static void logSale(long date, String items, String receipt, String customer){
+    public static void logSale(Date date, String items, String receipt, String customer){
 
     }
 
     // use case for logging a delivery
-    public static void logDelivery(long date, String items){
+    public static void logDelivery(Date date, String items){
 
     }
 
     // use case for logging a return
-    public static void logReturn(long date, String reason, String receipt, String customer){
+    public static void logReturn(Date date, String reason, String receipt, String customer){
 
     }
 
