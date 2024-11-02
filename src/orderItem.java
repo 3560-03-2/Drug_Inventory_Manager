@@ -1,4 +1,4 @@
-public class orderItem {
+public class OrderItem {
 
     private String product;
     private String info;

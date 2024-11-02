@@ -1,4 +1,4 @@
-public class supplier {
+public class Supplier {
     
     private String name;
     private String contactInfo;

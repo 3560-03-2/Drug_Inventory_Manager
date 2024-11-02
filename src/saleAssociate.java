@@ -1,4 +1,4 @@
-public class saleAssociate {
+public class SaleAssociate {
 
     private int employeeID;
     private String name;

@@ -1,26 +1,51 @@
-public class methods {
+public class Methods {
+    
+    // use case for logging a sale
+    public static void logSale(long date, String items, String receipt, String customer){
 
-    public void logDrug(String name, String desc) {
+    }
+
+    // use case for logging a delivery
+    public static void logDelivery(long date, String items){
+
+    }
+
+    // use case for logging a return
+    public static void logReturn(long date, String reason, String receipt, String customer){
+
+    }
+
+    // use case for finding a drug
+    public static void findDrug(String name, String category){
+        // Should return the drug based on name or category.
+    }
+
+    //use case for logging a drug in system
+    public static void logDrug(String name, String desc) {
         //add given drug with it's description to the system
     }
 
-    public void reorderDrug(String name) {
-        //invoke when particular drug stock falls below certain point
+    //use case for reordering drugs
+    public static void reorderDrug(String name) {
+        //invoke when particular drug stock falls below a certain threshold
         //reorder drug specified in parameter
     }
 
-    public void addSupplier(String name, String contactInfo, String address) {
+    //use case for adding a supplier into system
+    public static void addSupplier(String name, String contactInfo, String address) {
         //add supplier and their information to the system
-        //will create new "supplier"
+        //will create a new "supplier"
     }
 
-    public void removeSupplier(String name) {
+    //use case for removing supplier from system
+    public static void removeSupplier(String name) {
         //remove supplier of name specified in parameter
         //notify user if their searched supplier is not in the system and can't be removed
     }
 
-    public String searchSupplier(String query) {
+    //use case for searching suppliers logged in system
+    public static String searchSupplier(String query) {
         //find suppliers that match search query in parameter
-        //return string of suppliers that match query
+        //return string of suppliers and their information that match query, if any
     }
 }
