@@ -43,8 +43,20 @@ public class Methods {
             }
 
             // Execute the query and process the results
-            String sqlResult = myjdbc.returnTable(sqlQuery);
-            System.out.println("Matching drugs:\n" + sqlResult);
+            //String sqlResult = myjdbc.returnTable(sqlQuery);
+            //System.out.println("Matching drugs:\n" + sqlResult);
+
+            List<List<String>> drugList = new ArrayList<List<String>>();
+            drugList = myjdbc.returnData(sqlQuery);
+            for (List<String> row : drugList) {
+                Drug drug = new Drug(
+                    Integer.parseInt(row.get(0)),
+                    row.get(1),
+                    row.get(2),
+                    Integer.parseInt(row.get(3))
+                );
+                results.add(drug);
+            }
 
         } catch (Exception e) {
             System.out.println("Error finding drug: " + e.getMessage());
