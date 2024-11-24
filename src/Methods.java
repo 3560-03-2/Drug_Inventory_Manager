@@ -1,22 +1,67 @@
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.io.IOException;
 import java.sql.*;
 
 public class Methods {
     
-    // use case for logging a sale
-    public static void logSale(Date date, String items, String receipt, String customer){
+    private static String jbdcUrl = "jdbc:mysql://localhost:3306/mydb";
+    private static String user = "root";
+    private static String pass = "password";
 
+    // use case for logging a sale
+    public static void logSale(String receipt){
+        try {
+            ReceiptItems recieptItems = ReceiptReader.read(receipt); // parses through receipt file and stores data in receiptItems
+    
+            // store data from receipt
+            String customer = recieptItems.getCustomer(); // customer string used to search customer table for corresponding customerID
+            String items = String.join(", ", recieptItems.getItems()); // receiptReader reads items as a list of strings, so I join the list here to be stored in the table.
+            java.util.Date date = recieptItems.getDate();
+    
+            // convert javaUtilDate into sqlDate
+            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+    
+            // prepare sql query for adding sale
+            String sqlString2 = "INSERT INTO sale (date, items, receipt, Pharmacist_pharmacistID, Customers_customerID, Drug_drugID, Drug_Supplier_supplierID) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+            //TODO NEED METHOD TO SEARCH CUSTOMERS TABLE AND RETURN A CUSTOMER ID GIVEN A CUSTOMER'S NAME
+
+            //add sale to the system. this method protects against sql injection but needs testing
+            try (Connection connection = DriverManager.getConnection(jbdcUrl, user, pass); // connect to database
+            // prepare statement for execution
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlString2)) {
+
+                // parameters for prepared statement
+                preparedStatement.setDate(1, sqlDate);
+                preparedStatement.setString(2, items);
+                preparedStatement.setString(3, receipt);
+                preparedStatement.setInt(4, 1); // temporary foreign key, pharmacist
+                preparedStatement.setInt(5, 1); // temporary foreign key, customer
+                preparedStatement.setInt(6, 1); // temporary foreign key, drug 
+                preparedStatement.setInt(7, 1); // temporary foreign key, drug supplier
+
+                // execute query
+                int rows = preparedStatement.executeUpdate();
+                System.out.println("Inserted " + rows + " rows.");
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     // use case for logging a delivery
-    public static void logDelivery(Date date, String items){
+    public static void logDelivery(java.util.Date date, String items){
 
     }
 
     // use case for logging a return
-    public static void logReturn(Date date, String reason, String receipt, String customer){
+    public static void logReturn(String reason, String receipt){
 
     }
 
