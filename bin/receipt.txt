@@ -1,0 +1,22 @@
+Happy Pharmacy
+123 Road Drive
+Pomona California 12345
+123-123-1234
+
+Date: 11/22/2024 11:25 AM
+Customer: John Doe
+
+PURCHASE
+- Ibuprofen
+- Aspirin
+
+Number: XXXXXXXXXXXX1234
+Entry Mode: Swiped
+Card Type: DISCOVER
+
+Response: APPROVED
+Approval Code: 123456
+
+Total:  USD$ 10.00
+
+THANK YOU
