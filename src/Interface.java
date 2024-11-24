@@ -414,7 +414,7 @@ public class Interface {
         logReturnButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                //openLogReturnFrame();
+                openLogReturnFrame();
             }
         });     
 
@@ -422,7 +422,7 @@ public class Interface {
         logActionsFrame.setVisible(true);
     }
 
-    // Implement the action after clicking on the add supplier button
+    // Implement the action after clicking on the log sale button
     private void openLogSaleFrame() {
         JFrame logSaleFrame = new JFrame("Log a Sale");
         logSaleFrame.setSize(700, 300);
@@ -450,8 +450,58 @@ public class Interface {
             }
         });
 
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                logSaleFrame.setVisible(false);
+            }
+        });
+
         logSaleFrame.add(inputPanel, BorderLayout.NORTH);
         logSaleFrame.setVisible(true);
+    }
+
+    private void openLogReturnFrame(){
+        JFrame logReturnFrame = new JFrame("Log a Return");
+        logReturnFrame.setSize(700, 300);
+        logReturnFrame.setLayout(new FlowLayout());
+        logReturnFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.PAGE_AXIS));
+
+        JLabel receiptLabel = new JLabel("Path to receipt file:"); // If receipt.txt is in src folder, just type enter receipt.txt into text field
+        JTextField receiptField = new JTextField(50);
+        JLabel returnLabel = new JLabel("Reason for return:");
+        JTextField returnField = new JTextField(50);
+        JButton logButton = new JButton("Log Return");
+        JButton cancelButton = new JButton("Cancel");    
+        
+        inputPanel.add(receiptLabel);
+        inputPanel.add(receiptField);
+        inputPanel.add(returnLabel);
+        inputPanel.add(returnField);
+        inputPanel.add(logButton);
+        inputPanel.add(cancelButton);
+        
+        logButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String receipt = receiptField.getText();
+                String reason = returnField.getText();
+                Methods.logReturn(reason, receipt);
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                logReturnFrame.setVisible(false);
+            }
+        });
+
+        logReturnFrame.add(inputPanel, BorderLayout.NORTH);
+        logReturnFrame.setVisible(true);
     }
 
     public static void main(String[] args) {

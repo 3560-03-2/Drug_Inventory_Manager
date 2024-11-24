@@ -22,24 +22,24 @@ public class Methods {
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
     
             // prepare sql query for adding sale
-            String sqlString2 = "INSERT INTO sale (date, items, receipt, Pharmacist_pharmacistID, Customers_customerID, Drug_drugID, Drug_Supplier_supplierID) "
+            String sqlString = "INSERT INTO sale (date, items, receipt, Pharmacist_pharmacistID, Customers_customerID, Drug_drugID, Drug_Supplier_supplierID) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-            //TODO NEED METHOD TO SEARCH CUSTOMERS TABLE AND RETURN A CUSTOMER ID GIVEN A CUSTOMER'S NAME
+            //TODO NEED METHOD THAT, GIVEN A CUSTOMER'S NAME, SEARCHES THE CUSTOMERS TABLE AND RETURNS THE ID OF THE GIVEN CUSTOMER
 
             //add sale to the system. this method protects against sql injection but needs testing
             try (Connection connection = DriverManager.getConnection(jbdcUrl, user, pass); // connect to database
             // prepare statement for execution
-            PreparedStatement preparedStatement = connection.prepareStatement(sqlString2)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlString)) {
 
                 // parameters for prepared statement
                 preparedStatement.setDate(1, sqlDate);
                 preparedStatement.setString(2, items);
                 preparedStatement.setString(3, receipt);
-                preparedStatement.setInt(4, 1); // temporary foreign key, pharmacist
-                preparedStatement.setInt(5, 1); // temporary foreign key, customer
-                preparedStatement.setInt(6, 1); // temporary foreign key, drug 
-                preparedStatement.setInt(7, 1); // temporary foreign key, drug supplier
+                preparedStatement.setInt(4, 1); // temporary foreign key, pharmacistID
+                preparedStatement.setInt(5, 1); // temporary foreign key, customerID
+                preparedStatement.setInt(6, 1); // temporary foreign key, drugID
+                preparedStatement.setInt(7, 1); // temporary foreign key, drugSupplierID
 
                 // execute query
                 int rows = preparedStatement.executeUpdate();
@@ -62,7 +62,46 @@ public class Methods {
 
     // use case for logging a return
     public static void logReturn(String reason, String receipt){
+        try {
+            ReceiptItems recieptItems = ReceiptReader.read(receipt); // parses through receipt file and stores data in receiptItems
+    
+            // store data from receipt
+            String customer = recieptItems.getCustomer(); // customer string used to search customer table for corresponding customerID
+            java.util.Date date = recieptItems.getDate();
+    
+            //TODO NEED METHOD THAT, GIVEN A CUSTOMER'S NAME, SEARCHES THE CUSTOMERS TABLE AND RETURNS THE ID OF THE GIVEN CUSTOMER    
+            
+            // convert javaUtilDate into sqlDate
+            java.sql.Date sqlDate = new java.sql.Date(date.getTime());    
+            
+            // prepare sql query for adding return
+            String sqlString = "INSERT INTO return (date, reason, receipt, customer, SalesAssociate_employeeID) "
+            + "VALUES (?, ?, ?, ?, ?)";
+            
+            //add return to the system. this method protects against sql injection but needs testing
+            try (Connection connection = DriverManager.getConnection(jbdcUrl, user, pass); // connect to database
+            // prepare statement for execution
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlString)) {
 
+                // parameters for prepared statement
+                preparedStatement.setDate(1, sqlDate);
+                preparedStatement.setString(2, reason);
+                preparedStatement.setString(3, receipt);
+                preparedStatement.setString(4, customer);
+                preparedStatement.setInt(5, 1); // temporary foreign key, SalesAssociate_employeeID
+
+                // execute query
+                int rows = preparedStatement.executeUpdate();
+                System.out.println("Inserted " + rows + " rows.");
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }            
+            
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     // use case for finding a drug
