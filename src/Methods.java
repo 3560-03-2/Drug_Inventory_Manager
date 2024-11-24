@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class Methods {
     
     // use case for logging a sale
@@ -16,8 +20,37 @@ public class Methods {
     }
 
     // use case for finding a drug
-    public static void findDrug(String name, String category){
-        // Should return the drug based on name or category.
+    public static List<Drug> findDrug(String name, String category) {
+        List<Drug> results = new ArrayList<>();
+        String sqlQuery;
+
+        try {
+            MyJDBC myjdbc = new MyJDBC();
+
+            // Build the SQL query based on input
+            if (!name.isEmpty() && !category.isEmpty()) {
+                sqlQuery = String.format(
+                    "SELECT * FROM drug WHERE name LIKE '%%%s%%' AND category LIKE '%%%s%%';",
+                    name, category
+                );
+            } else if (!name.isEmpty()) {
+                sqlQuery = String.format("SELECT * FROM drug WHERE name LIKE '%%%s%%';", name);
+            } else if (!category.isEmpty()) {
+                sqlQuery = String.format("SELECT * FROM drug WHERE category LIKE '%%%s%%';", category);
+            } else {
+                System.out.println("Both name and category are empty!");
+                return results;
+            }
+
+            // Execute the query and process the results
+            String sqlResult = myjdbc.returnTable(sqlQuery);
+            System.out.println("Matching drugs:\n" + sqlResult);
+
+        } catch (Exception e) {
+            System.out.println("Error finding drug: " + e.getMessage());
+        }
+
+        return results; // Empty list for now (can be enhanced later)
     }
 
     //use case for logging a drug in system

@@ -12,7 +12,7 @@ public class MyJDBC {
     }
 
     // Function to return a formatted table from SQL query result
-    private String returnTable(String sqlString) throws SQLException {
+    public String returnTable(String sqlString) throws SQLException {
         Statement statement = connectToDatabase().createStatement();
         ResultSet resultSet = statement.executeQuery(sqlString);
         StringBuilder table = new StringBuilder();
