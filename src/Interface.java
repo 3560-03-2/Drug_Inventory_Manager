@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
 import javax.swing.*;
 import java.util.List;
 
@@ -97,6 +98,18 @@ public class Interface {
 
         // Add the findDrugButton to the main frame
         mainFrame.add(findDrugButton);
+
+        // Create a button for supplier button
+        JButton supplierButton = new JButton("Supplier Actions");
+        supplierButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                openSupplierActionsFrame();
+            }
+        });
+
+        // Add the supplier button to the main frame
+        mainFrame.add(supplierButton);
     }
 
     // Method to open the "Find Drug" frame
@@ -162,6 +175,196 @@ public class Interface {
         findDrugFrame.add(scrollPane, BorderLayout.CENTER);
 
         findDrugFrame.setVisible(true);
+    }
+
+    // Implement the action after clicking on the supplier button
+    private void openSupplierActionsFrame() {
+        JFrame supplierActionsFrame = new JFrame("Choose supplier actions");
+                supplierActionsFrame.setSize(700, 300);
+                supplierActionsFrame.setLayout(new BorderLayout());
+                supplierActionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+                JPanel inputPanel = new JPanel();
+                inputPanel.setLayout(new FlowLayout());
+
+                // Create 3 buttons for the 3 use cases of supplier
+                JButton addSupplierButton = new JButton("Add a Supplier");
+                JButton removeSupplierButton = new JButton("Remove a Supplier");
+                JButton searchSupplierButton = new JButton("Search a Supplier");
+
+                inputPanel.add(addSupplierButton);
+                inputPanel.add(removeSupplierButton);
+                inputPanel.add(searchSupplierButton);
+
+                addSupplierButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent ae) {
+                        openAddSupplierFrame();
+                    }
+                });
+                removeSupplierButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent ae) {
+                        openRemoveSupplierFrame();
+                    }
+                });
+                searchSupplierButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent ae) {
+                        openSearchSupplierFrame();
+                    }
+                });
+            
+                supplierActionsFrame.add(inputPanel, BorderLayout.NORTH);
+                supplierActionsFrame.setVisible(true);
+    }
+
+    // Implement the action after clicking on the add supplier button
+    private void openAddSupplierFrame() {
+        JFrame addSupplierFrame = new JFrame("Add a Supplier");
+        addSupplierFrame.setSize(700, 300);
+        addSupplierFrame.setLayout(new FlowLayout());
+        addSupplierFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.PAGE_AXIS));
+
+        JLabel idLabel = new JLabel("ID:");
+        JTextField idField = new JTextField(10);
+        JLabel nameLabel = new JLabel("Name:");
+        JTextField nameField = new JTextField(20);
+        JLabel contactLabel = new JLabel("Contact Info:");
+        JTextField contactField = new JTextField(20);
+        JLabel addressLabel = new JLabel("Address:");
+        JTextField addressField = new JTextField(30);
+        JButton addButton = new JButton("Add");
+        JButton cancelButton = new JButton("Cancel");
+
+        inputPanel.add(idLabel);
+        inputPanel.add(idField);
+        inputPanel.add(nameLabel);
+        inputPanel.add(nameField);
+        inputPanel.add(contactLabel);
+        inputPanel.add(contactField);
+        inputPanel.add(addressLabel);
+        inputPanel.add(addressField);
+        inputPanel.add(addButton);
+        inputPanel.add(cancelButton);
+
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                Supplier supplier = new Supplier(Integer.parseInt(idField.getText()), nameField.getText(), 
+                                                 contactField.getText(), addressField.getText());
+                Methods.addSupplier(supplier);
+                JOptionPane.showMessageDialog(null, 
+                                      "Supplier added successfully!");
+                addSupplierFrame.setVisible(false);
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                addSupplierFrame.setVisible(false);
+            }
+        });
+
+        addSupplierFrame.add(inputPanel, BorderLayout.NORTH);
+        addSupplierFrame.setVisible(true);
+    }
+
+    // Implement the action after clicking on the remove supplier button
+    private void openRemoveSupplierFrame() {
+        JFrame removeSupplierFrame = new JFrame("Remove a Supplier");
+        removeSupplierFrame.setSize(700, 300);
+        removeSupplierFrame.setLayout(new FlowLayout());
+        removeSupplierFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.PAGE_AXIS));
+
+
+        JLabel idLabel = new JLabel("ID:");
+        JTextField idField = new JTextField(10);
+        JButton removeButton = new JButton("Remove");
+        JButton cancelButton = new JButton("Cancel");
+        
+        inputPanel.add(idLabel);
+        inputPanel.add(idField);
+        inputPanel.add(removeButton);
+        inputPanel.add(cancelButton);
+    
+        removeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                Methods.removeSupplier(Integer.parseInt(idField.getText()));
+                JOptionPane.showMessageDialog(null, 
+                                      "Supplier removed successfully!");
+                removeSupplierFrame.setVisible(false);
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                removeSupplierFrame.setVisible(false);
+            }
+        });
+
+        removeSupplierFrame.add(inputPanel, BorderLayout.NORTH);
+        removeSupplierFrame.setVisible(true);
+    }
+
+    // Implement the action after clicking on the search supplier button
+    private void openSearchSupplierFrame() { 
+        JFrame searchSupplierFrame = new JFrame("Search a Supplier");
+        searchSupplierFrame.setSize(700, 300);
+        searchSupplierFrame.setLayout(new FlowLayout());
+        searchSupplierFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.PAGE_AXIS));
+
+        JLabel queryLabel = new JLabel("Search Query (Type in anything about the supplier):");
+        JTextField queryField = new JTextField(30);
+        JButton searchButton = new JButton("Search");
+        JButton cancelButton = new JButton("Cancel");
+
+        inputPanel.add(queryLabel);
+        inputPanel.add(queryField);
+        inputPanel.add(searchButton);
+        inputPanel.add(cancelButton);
+
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String supplier = "";
+                try {
+                    supplier = Methods.searchSupplier(queryField.getText());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                if (supplier!= null) {
+                    JOptionPane.showMessageDialog(null, supplier, 
+                                            "Supplier Details", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(searchSupplierFrame, 
+                                          "No supplier found with the given query.");
+                }
+                searchSupplierFrame.setVisible(false);
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                searchSupplierFrame.setVisible(false);
+            }
+        });
+
+        searchSupplierFrame.add(inputPanel, BorderLayout.NORTH);
+        searchSupplierFrame.setVisible(true);
     }
 
     public static void main(String[] args) {
