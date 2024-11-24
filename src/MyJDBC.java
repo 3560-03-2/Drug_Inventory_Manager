@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.*;
 
 public class MyJDBC {
     final String DB_URL = "jdbc:mysql://localhost:3306/mydb";
@@ -41,7 +42,6 @@ public class MyJDBC {
         resultSet.close();
         statement.close();
         return table.toString();
-        
     }
 
     // Function to execute SQL queries (update, insert, delete)
@@ -57,6 +57,23 @@ public class MyJDBC {
         System.out.println(table);
     }
 
+    public List<List<String>> returnData(String sqlString)throws SQLException{
+        List<List<String>> data = new ArrayList<>();
+        Statement statement = connectToDatabase().createStatement();
+        ResultSet resultSet = statement.executeQuery(sqlString);
+        ResultSetMetaData rsmd = resultSet.getMetaData();
+        int columnCount = rsmd.getColumnCount();
+
+        while (resultSet.next()) {
+            List<String> tempList = new ArrayList<String>();
+            for (int i = 1; i <= columnCount; i++) {
+                tempList.add(resultSet.getString(i)); 
+            }
+            data.add(tempList);
+        }
+        return data;
+    }
+    
     /* 
     public static void main(String[] args) throws Exception {
         MyJDBC myjdbc = new MyJDBC();
