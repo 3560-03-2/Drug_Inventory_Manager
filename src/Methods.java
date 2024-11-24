@@ -77,20 +77,65 @@ public class Methods {
     }
 
     //use case for adding a supplier into system
-    public static void addSupplier(String name, String contactInfo, String address) {
+    public static void addSupplier(Supplier newSupplier) {
+        int newSupplierID = newSupplier.getSupplierID();
+        String newName = newSupplier.getName();
+        String newContactInfo = newSupplier.getContactInfo();
+        String newAddress = newSupplier.getAddress();
         //add supplier and their information to the system
-        //will create a new "supplier"
+        String sqlString = "INSERT INTO mydb.supplier(supplierID, name, contactInfo, address)";
+        sqlString += String.format(" VALUES(%d, '%s', '%s', '%s');", newSupplierID, newName, newContactInfo, newAddress);   
+
+        try{
+            MyJDBC myjdbc = new MyJDBC();
+            myjdbc.alterDatabase(sqlString);
+        } catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     //use case for removing supplier from system
-    public static void removeSupplier(String name) {
+    public static void removeSupplier(int ID) {
         //remove supplier of name specified in parameter
         //notify user if their searched supplier is not in the system and can't be removed
+        String sqlString = "DELETE FROM supplier WHERE (supplierID = " + ID + ");";
+        try{
+            MyJDBC myjdbc = new MyJDBC();
+            myjdbc.alterDatabase(sqlString);
+        } catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     //use case for searching suppliers logged in system
-    public static String searchSupplier(String query) {
+    public static String searchSupplier(String query) throws SQLException {
         //find suppliers that match search query in parameter
         //return string of suppliers and their information that match query, if any
+        //query can be any thing related to the supplier such as name or address
+        MyJDBC myjdbc = new MyJDBC();
+        Supplier supplier = new Supplier(0,"", "", "");
+        String sqlString = "SELECT * FROM supplier;";
+        List<List<String>> suppliersData = myjdbc.returnData(sqlString);
+        for (List<String> supplierData : suppliersData){
+            if (supplierData.get(0).toLowerCase().contains(query.toLowerCase()) ||
+                    supplierData.get(1).toLowerCase().contains(query.toLowerCase()) ||
+                    supplierData.get(2).toLowerCase().contains(query.toLowerCase()) ||
+                    supplierData.get(3).toLowerCase().contains(query.toLowerCase())){ 
+                    supplier = new Supplier(
+                        Integer.parseInt(supplierData.get(0)),
+                        supplierData.get(1),
+                        supplierData.get(2),
+                        supplierData.get(3));
+            }
+        }
+        if (supplier.getName().equals("")){
+            return null;
+        }
+    
+        String result = "Name: " + supplier.getName();
+        result += "\nID: " + supplier.getSupplierID();
+        result += "\nContact Info: " + supplier.getContactInfo();
+        result += "\nAddress: " + supplier.getAddress();
+        return result;
     }
 }
