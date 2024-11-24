@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.sql.SQLException;
 import javax.swing.*;
 import java.util.List;
@@ -110,6 +111,18 @@ public class Interface {
 
         // Add the supplier button to the main frame
         mainFrame.add(supplierButton);
+
+        // Create a button for log actions
+        JButton logButton = new JButton("Log Actions");
+        logButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                openLogActionsFrame();
+            }
+        });
+
+        // Add the log button to the main frame
+        mainFrame.add(logButton);
     }
 
     // Method to open the "Find Drug" frame
@@ -365,6 +378,80 @@ public class Interface {
 
         searchSupplierFrame.add(inputPanel, BorderLayout.NORTH);
         searchSupplierFrame.setVisible(true);
+    }
+
+    // Implement the action after clicking on the logs button
+    private void openLogActionsFrame() {
+        JFrame logActionsFrame = new JFrame("Choose log actions");
+        logActionsFrame.setSize(700, 300);
+        logActionsFrame.setLayout(new BorderLayout());
+        logActionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new FlowLayout());
+
+        // Create 3 buttons for the 3 use cases of logs
+        JButton logSaleButton = new JButton("Log a Sale");
+        JButton logDeliveryButton = new JButton("Log a Delivery");
+        JButton logReturnButton = new JButton("Log a Return");
+
+        inputPanel.add(logSaleButton);
+        inputPanel.add(logDeliveryButton);
+        inputPanel.add(logReturnButton);
+
+        logSaleButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                openLogSaleFrame();
+            }
+        });
+        logDeliveryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                //openLogDeliveryFrame();
+            }
+        });
+        logReturnButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                //openLogReturnFrame();
+            }
+        });     
+
+        logActionsFrame.add(inputPanel, BorderLayout.NORTH);
+        logActionsFrame.setVisible(true);
+    }
+
+    // Implement the action after clicking on the add supplier button
+    private void openLogSaleFrame() {
+        JFrame logSaleFrame = new JFrame("Log a Sale");
+        logSaleFrame.setSize(700, 300);
+        logSaleFrame.setLayout(new FlowLayout());
+        logSaleFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.PAGE_AXIS));
+    
+        JLabel receiptLabel = new JLabel("Path to receipt file:"); // If receipt.txt is in src folder, just type enter receipt.txt into text field
+        JTextField receiptField = new JTextField(50);
+        JButton logButton = new JButton("Log Sale");
+        JButton cancelButton = new JButton("Cancel");
+    
+        inputPanel.add(receiptLabel);
+        inputPanel.add(receiptField);
+        inputPanel.add(logButton);
+        inputPanel.add(cancelButton);
+    
+        logButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String receipt = receiptField.getText();
+                Methods.logSale(receipt);
+            }
+        });
+
+        logSaleFrame.add(inputPanel, BorderLayout.NORTH);
+        logSaleFrame.setVisible(true);
     }
 
     public static void main(String[] args) {
