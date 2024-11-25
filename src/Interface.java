@@ -58,6 +58,15 @@ public class Interface {
                     public void actionPerformed(ActionEvent ae) {
                         //add code to check that all areas are filled in with information then
                         //add code to create new drug object with the parameters set to the data entered
+                        Drug drug = new Drug(drugNameField.getText(), categoryField.getText(), Integer.parseInt(stockField.getText()));
+                        try {
+                            Methods.logDrug(drug);
+                            JOptionPane.showMessageDialog(null, 
+                                      "Drug logged successfully!");
+                        } catch (SQLException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
                         secondaryFrame.setVisible(false);
                     }
                 });
@@ -242,8 +251,6 @@ public class Interface {
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.PAGE_AXIS));
 
-        JLabel idLabel = new JLabel("ID:");
-        JTextField idField = new JTextField(10);
         JLabel nameLabel = new JLabel("Name:");
         JTextField nameField = new JTextField(20);
         JLabel contactLabel = new JLabel("Contact Info:");
@@ -253,8 +260,6 @@ public class Interface {
         JButton addButton = new JButton("Add");
         JButton cancelButton = new JButton("Cancel");
 
-        inputPanel.add(idLabel);
-        inputPanel.add(idField);
         inputPanel.add(nameLabel);
         inputPanel.add(nameField);
         inputPanel.add(contactLabel);
@@ -267,7 +272,7 @@ public class Interface {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                Supplier supplier = new Supplier(Integer.parseInt(idField.getText()), nameField.getText(), 
+                Supplier supplier = new Supplier(nameField.getText(), 
                                                  contactField.getText(), addressField.getText());
                 Methods.addSupplier(supplier);
                 JOptionPane.showMessageDialog(null, 
@@ -298,20 +303,25 @@ public class Interface {
         inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.PAGE_AXIS));
 
 
-        JLabel idLabel = new JLabel("ID:");
-        JTextField idField = new JTextField(10);
+        JLabel nameLabel = new JLabel("Name:");
+        JTextField nameField = new JTextField(20);
         JButton removeButton = new JButton("Remove");
         JButton cancelButton = new JButton("Cancel");
         
-        inputPanel.add(idLabel);
-        inputPanel.add(idField);
+        inputPanel.add(nameLabel);
+        inputPanel.add(nameField);
         inputPanel.add(removeButton);
         inputPanel.add(cancelButton);
     
         removeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                Methods.removeSupplier(Integer.parseInt(idField.getText()));
+                try {
+                    Methods.removeSupplier(nameField.getText());
+                } catch (NumberFormatException | SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
                 JOptionPane.showMessageDialog(null, 
                                       "Supplier removed successfully!");
                 removeSupplierFrame.setVisible(false);

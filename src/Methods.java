@@ -75,8 +75,8 @@ public class Methods {
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());    
             
             // prepare sql query for adding return
-            String sqlString = "INSERT INTO return (date, reason, receipt, customer, SalesAssociate_employeeID) "
-            + "VALUES (?, ?, ?, ?, ?)";
+            String sqlString = "INSERT INTO mydb.return (date, reason, receipt, customer, SalesAssociate_employeeID) "
+            + "VALUES (?, ?, ?, ?, ?);";
             
             //add return to the system. this method protects against sql injection but needs testing
             try (Connection connection = DriverManager.getConnection(jbdcUrl, user, pass); // connect to database
@@ -135,7 +135,6 @@ public class Methods {
             drugList = myjdbc.returnData(sqlQuery);
             for (List<String> row : drugList) {
                 Drug drug = new Drug(
-                    Integer.parseInt(row.get(0)),
                     row.get(1),
                     row.get(2),
                     Integer.parseInt(row.get(3))
@@ -151,8 +150,24 @@ public class Methods {
     }
 
     //use case for logging a drug in system
-    public static void logDrug(String name, String desc) {
+    public static void logDrug(Drug newDrug) throws SQLException {
         //add given drug with it's description to the system
+        MyJDBC myjdbc = new MyJDBC();
+        Random rand = new Random();
+        String newName = newDrug.getName();
+        String newCategory = newDrug.getCategory();
+        int newStock = newDrug.getStock();
+        int newSupplierID = 0;
+        int supplierSize = 0;
+
+        String sqlString = "SELECT * FROM supplier";
+        supplierSize = myjdbc.returnData(sqlString).size();
+        newSupplierID = rand.nextInt(supplierSize + 1);
+        if (newSupplierID > 6){newSupplierID--;}
+
+        sqlString = "INSERT INTO drug (name, category, stock, Supplier_supplierID)";
+        sqlString += String.format(" VALUES('%s', '%s', %d, %d)", newName, newCategory, newStock, newSupplierID);
+        myjdbc.alterDatabase(sqlString);
     }
 
     //use case for reordering drugs
@@ -163,13 +178,12 @@ public class Methods {
 
     //use case for adding a supplier into system
     public static void addSupplier(Supplier newSupplier) {
-        int newSupplierID = newSupplier.getSupplierID();
         String newName = newSupplier.getName();
         String newContactInfo = newSupplier.getContactInfo();
         String newAddress = newSupplier.getAddress();
         //add supplier and their information to the system
-        String sqlString = "INSERT INTO mydb.supplier(supplierID, name, contactInfo, address)";
-        sqlString += String.format(" VALUES(%d, '%s', '%s', '%s');", newSupplierID, newName, newContactInfo, newAddress);   
+        String sqlString = "INSERT INTO mydb.supplier(name, contactInfo, address)";
+        sqlString += String.format(" VALUES('%s', '%s', '%s');", newName, newContactInfo, newAddress);   
 
         try{
             MyJDBC myjdbc = new MyJDBC();
@@ -180,12 +194,14 @@ public class Methods {
     }
 
     //use case for removing supplier from system
-    public static void removeSupplier(int ID) {
+    public static void removeSupplier(String name) throws NumberFormatException, SQLException {
         //remove supplier of name specified in parameter
         //notify user if their searched supplier is not in the system and can't be removed
-        String sqlString = "DELETE FROM supplier WHERE (supplierID = " + ID + ");";
         try{
             MyJDBC myjdbc = new MyJDBC();
+            String sqlString = "SELECT supplierID FROM supplier WHERE name = '"+ name + "';";
+            int ID = Integer.parseInt(myjdbc.returnData(sqlString).get(0).get(0));
+            sqlString = "DELETE FROM supplier WHERE (supplierID = " + ID + ");";
             myjdbc.alterDatabase(sqlString);
         } catch (Exception e){
             System.out.println("Error: " + e.getMessage());
@@ -198,7 +214,7 @@ public class Methods {
         //return string of suppliers and their information that match query, if any
         //query can be any thing related to the supplier such as name or address
         MyJDBC myjdbc = new MyJDBC();
-        Supplier supplier = new Supplier(0,"", "", "");
+        Supplier supplier = new Supplier("", "", "");
         String sqlString = "SELECT * FROM supplier;";
         List<List<String>> suppliersData = myjdbc.returnData(sqlString);
         for (List<String> supplierData : suppliersData){
@@ -207,7 +223,6 @@ public class Methods {
                     supplierData.get(2).toLowerCase().contains(query.toLowerCase()) ||
                     supplierData.get(3).toLowerCase().contains(query.toLowerCase())){ 
                     supplier = new Supplier(
-                        Integer.parseInt(supplierData.get(0)),
                         supplierData.get(1),
                         supplierData.get(2),
                         supplierData.get(3));
@@ -218,7 +233,6 @@ public class Methods {
         }
     
         String result = "Name: " + supplier.getName();
-        result += "\nID: " + supplier.getSupplierID();
         result += "\nContact Info: " + supplier.getContactInfo();
         result += "\nAddress: " + supplier.getAddress();
         return result;

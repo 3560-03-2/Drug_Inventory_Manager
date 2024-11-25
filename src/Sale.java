@@ -1,3 +1,5 @@
+import java.sql.Date;
+
 public class Sale {
     
     private int saleID; // Primary key
