@@ -167,12 +167,24 @@ public class Methods {
         sqlString = "INSERT INTO drug (name, category, stock, Supplier_supplierID)";
         sqlString += String.format(" VALUES('%s', '%s', %d, %d)", newName, newCategory, newStock, newSupplierID);
         myjdbc.alterDatabase(sqlString);
+    
+        if (newStock <= 10) {
+            System.out.println("Inventory is low.");
+            reorderedDrug(newName, 50);
+        }
     }
 
     //use case for reordering drugs
-    public static void reorderDrug(String name) {
-        //invoke when particular drug stock falls below a certain threshold
-        //reorder drug specified in parameter
+    public static boolean reorderedDrug(String name, int qty) {
+        List<Drug> results = findDrug(name, "");
+        if (!results.isEmpty()) {
+            Drug first = results.get(0);
+            System.out.println("Reordering " + qty + " items of " + first.getName() + ".");
+            return true;
+        } else {
+            System.out.println("No drug to reorder found.");
+            return false;
+        }
     }
 
     //use case for adding a supplier into system
