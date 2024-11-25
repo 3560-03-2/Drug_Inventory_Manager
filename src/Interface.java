@@ -589,7 +589,7 @@ public class Interface {
                 if(drugNameField.getText().isEmpty() || quantityField.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please fill in all fields.");
                 }
- /*             else {
+                else {
                     //add code to create new drug object with the parameters set to the data entered
                     Boolean bool = Methods.reorderedDrug(drugNameField.getText(), Integer.parseInt(quantityField.getText()));
                     if(bool){
@@ -598,7 +598,7 @@ public class Interface {
                     }
                     else
                         JOptionPane.showMessageDialog(null, "Drug to reorder could not be found.");
-                } */
+                }
             }
         });
 
