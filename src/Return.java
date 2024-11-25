@@ -1,3 +1,5 @@
+import java.sql.Date;
+
 public class Return {
     
     private int returnID; // Primary Key

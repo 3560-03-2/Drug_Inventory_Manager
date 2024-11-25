@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.sql.SQLException;
 import javax.swing.*;
 import java.util.List;
@@ -57,6 +58,15 @@ public class Interface {
                     public void actionPerformed(ActionEvent ae) {
                         //add code to check that all areas are filled in with information then
                         //add code to create new drug object with the parameters set to the data entered
+                        Drug drug = new Drug(drugNameField.getText(), categoryField.getText(), Integer.parseInt(stockField.getText()));
+                        try {
+                            Methods.logDrug(drug);
+                            JOptionPane.showMessageDialog(null, 
+                                      "Drug logged successfully!");
+                        } catch (SQLException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
                         secondaryFrame.setVisible(false);
                     }
                 });
@@ -110,6 +120,18 @@ public class Interface {
 
         // Add the supplier button to the main frame
         mainFrame.add(supplierButton);
+
+        // Create a button for log actions
+        JButton logButton = new JButton("Log Actions");
+        logButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                openLogActionsFrame();
+            }
+        });
+
+        // Add the log button to the main frame
+        mainFrame.add(logButton);
     }
 
     // Method to open the "Find Drug" frame
@@ -229,8 +251,6 @@ public class Interface {
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.PAGE_AXIS));
 
-        JLabel idLabel = new JLabel("ID:");
-        JTextField idField = new JTextField(10);
         JLabel nameLabel = new JLabel("Name:");
         JTextField nameField = new JTextField(20);
         JLabel contactLabel = new JLabel("Contact Info:");
@@ -240,8 +260,6 @@ public class Interface {
         JButton addButton = new JButton("Add");
         JButton cancelButton = new JButton("Cancel");
 
-        inputPanel.add(idLabel);
-        inputPanel.add(idField);
         inputPanel.add(nameLabel);
         inputPanel.add(nameField);
         inputPanel.add(contactLabel);
@@ -254,7 +272,7 @@ public class Interface {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                Supplier supplier = new Supplier(Integer.parseInt(idField.getText()), nameField.getText(), 
+                Supplier supplier = new Supplier(nameField.getText(), 
                                                  contactField.getText(), addressField.getText());
                 Methods.addSupplier(supplier);
                 JOptionPane.showMessageDialog(null, 
@@ -285,20 +303,25 @@ public class Interface {
         inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.PAGE_AXIS));
 
 
-        JLabel idLabel = new JLabel("ID:");
-        JTextField idField = new JTextField(10);
+        JLabel nameLabel = new JLabel("Name:");
+        JTextField nameField = new JTextField(20);
         JButton removeButton = new JButton("Remove");
         JButton cancelButton = new JButton("Cancel");
         
-        inputPanel.add(idLabel);
-        inputPanel.add(idField);
+        inputPanel.add(nameLabel);
+        inputPanel.add(nameField);
         inputPanel.add(removeButton);
         inputPanel.add(cancelButton);
     
         removeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                Methods.removeSupplier(Integer.parseInt(idField.getText()));
+                try {
+                    Methods.removeSupplier(nameField.getText());
+                } catch (NumberFormatException | SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
                 JOptionPane.showMessageDialog(null, 
                                       "Supplier removed successfully!");
                 removeSupplierFrame.setVisible(false);
@@ -365,6 +388,130 @@ public class Interface {
 
         searchSupplierFrame.add(inputPanel, BorderLayout.NORTH);
         searchSupplierFrame.setVisible(true);
+    }
+
+    // Implement the action after clicking on the logs button
+    private void openLogActionsFrame() {
+        JFrame logActionsFrame = new JFrame("Choose log actions");
+        logActionsFrame.setSize(700, 300);
+        logActionsFrame.setLayout(new BorderLayout());
+        logActionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new FlowLayout());
+
+        // Create 3 buttons for the 3 use cases of logs
+        JButton logSaleButton = new JButton("Log a Sale");
+        JButton logDeliveryButton = new JButton("Log a Delivery");
+        JButton logReturnButton = new JButton("Log a Return");
+
+        inputPanel.add(logSaleButton);
+        inputPanel.add(logDeliveryButton);
+        inputPanel.add(logReturnButton);
+
+        logSaleButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                openLogSaleFrame();
+            }
+        });
+        logDeliveryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                //openLogDeliveryFrame();
+            }
+        });
+        logReturnButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                openLogReturnFrame();
+            }
+        });     
+
+        logActionsFrame.add(inputPanel, BorderLayout.NORTH);
+        logActionsFrame.setVisible(true);
+    }
+
+    // Implement the action after clicking on the log sale button
+    private void openLogSaleFrame() {
+        JFrame logSaleFrame = new JFrame("Log a Sale");
+        logSaleFrame.setSize(700, 300);
+        logSaleFrame.setLayout(new FlowLayout());
+        logSaleFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.PAGE_AXIS));
+    
+        JLabel receiptLabel = new JLabel("Path to receipt file:"); // If receipt.txt is in src folder, just type enter receipt.txt into text field
+        JTextField receiptField = new JTextField(50);
+        JButton logButton = new JButton("Log Sale");
+        JButton cancelButton = new JButton("Cancel");
+    
+        inputPanel.add(receiptLabel);
+        inputPanel.add(receiptField);
+        inputPanel.add(logButton);
+        inputPanel.add(cancelButton);
+    
+        logButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String receipt = receiptField.getText();
+                Methods.logSale(receipt);
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                logSaleFrame.setVisible(false);
+            }
+        });
+
+        logSaleFrame.add(inputPanel, BorderLayout.NORTH);
+        logSaleFrame.setVisible(true);
+    }
+
+    private void openLogReturnFrame(){
+        JFrame logReturnFrame = new JFrame("Log a Return");
+        logReturnFrame.setSize(700, 300);
+        logReturnFrame.setLayout(new FlowLayout());
+        logReturnFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.PAGE_AXIS));
+
+        JLabel receiptLabel = new JLabel("Path to receipt file:"); // If receipt.txt is in src folder, just type enter receipt.txt into text field
+        JTextField receiptField = new JTextField(50);
+        JLabel returnLabel = new JLabel("Reason for return:");
+        JTextField returnField = new JTextField(50);
+        JButton logButton = new JButton("Log Return");
+        JButton cancelButton = new JButton("Cancel");    
+        
+        inputPanel.add(receiptLabel);
+        inputPanel.add(receiptField);
+        inputPanel.add(returnLabel);
+        inputPanel.add(returnField);
+        inputPanel.add(logButton);
+        inputPanel.add(cancelButton);
+        
+        logButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String receipt = receiptField.getText();
+                String reason = returnField.getText();
+                Methods.logReturn(reason, receipt);
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                logReturnFrame.setVisible(false);
+            }
+        });
+
+        logReturnFrame.add(inputPanel, BorderLayout.NORTH);
+        logReturnFrame.setVisible(true);
     }
 
     public static void main(String[] args) {

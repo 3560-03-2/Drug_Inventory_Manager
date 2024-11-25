@@ -1,3 +1,5 @@
+import java.sql.Date;
+
 public class Order {
     
     private int orderID; // Primary Key

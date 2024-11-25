@@ -1,20 +1,13 @@
 public class Drug {
 
-    private int drugID; // Primary Key
     private String name;
     private String category;
     private int stock;
 
-    public Drug(int drugID, String name, String category, int stock) {
-        this.drugID = drugID;
+    public Drug(String name, String category, int stock) {
         this.name = name;
         this.category = category;
         this.stock = stock;
-    }
-
-    // Getter for drugID
-    public int getDrugID() {
-        return drugID;
     }
 
     // Getter for name
@@ -31,5 +24,4 @@ public class Drug {
     public int getStock() {
         return stock;
     }
-
 }

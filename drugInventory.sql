@@ -21,7 +21,7 @@ USE `mydb` ;
 -- Table `mydb`.`Supplier`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Supplier` (
-  `supplierID` INT NOT NULL,
+  `supplierID` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(125) NULL,
   `contactInfo` VARCHAR(125) NULL,
   `address` VARCHAR(125) NULL,
@@ -33,7 +33,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Drug`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Drug` (
-  `drugID` INT NOT NULL,
+  `drugID` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(125) NULL,
   `category` VARCHAR(125) NULL,
   `stock` INT NULL,
@@ -52,7 +52,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Inventory`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Inventory` (
-  `inventoryID` INT NOT NULL,
+  `inventoryID` INT NOT NULL AUTO_INCREMENT,
   `stock` INT NULL,
   `Drug_drugID` INT NOT NULL,
   `Drug_Supplier_supplierID` INT NOT NULL,
@@ -70,7 +70,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Pharmacist`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Pharmacist` (
-  `pharmacistID` INT NOT NULL,
+  `pharmacistID` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(125) NULL,
   `contactInfo` VARCHAR(125) NULL,
   PRIMARY KEY (`pharmacistID`))
@@ -81,7 +81,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Customers`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Customers` (
-  `customerID` INT NOT NULL,
+  `customerID` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(125) NULL,
   `address` VARCHAR(125) NULL,
   PRIMARY KEY (`customerID`))
@@ -92,7 +92,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Sale`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Sale` (
-  `saleID` INT NOT NULL,
+  `saleID` INT NOT NULL AUTO_INCREMENT,
   `date` DATE NULL,
   `items` TEXT(10000) NULL,
   `receipt` VARCHAR(125) NULL,
@@ -126,7 +126,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`CustomerOrder`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`CustomerOrder` (
-  `orderID` INT NOT NULL,
+  `orderID` INT NOT NULL AUTO_INCREMENT,
   `date` DATE NULL,
   `quantity` INT NULL,
   `status` VARCHAR(125) NULL,
@@ -145,7 +145,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`SalesAssociate`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`SalesAssociate` (
-  `employeeID` INT NOT NULL,
+  `employeeID` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(125) NULL,
   `contactInfo` VARCHAR(125) NULL,
   PRIMARY KEY (`employeeID`))
@@ -156,9 +156,10 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Return`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Return` (
-  `returnID` INT NOT NULL,
+  `returnID` INT NOT NULL AUTO_INCREMENT,
   `date` DATE NULL,
   `reason` TEXT(10000) NULL,
+  `receipt` VARCHAR(50),
   `customer` VARCHAR(125) NULL,
   `SalesAssociate_employeeID` INT NOT NULL,
   PRIMARY KEY (`returnID`),
@@ -175,7 +176,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`OrderItem`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`OrderItem` (
-  `orderItemID` INT NOT NULL,
+  `orderItemID` INT NOT NULL AUTO_INCREMENT,
   `productInformation` TEXT(10000) NULL,
   `instructions` TEXT(10000) NULL,
   `Drug_drugID` INT NOT NULL,
@@ -194,7 +195,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Order`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Order` (
-  `orderID` INT NOT NULL,
+  `orderID` INT NOT NULL AUTO_INCREMENT,
   `purchaseDate` DATE NULL,
   `OrderItem_orderItemID` INT NOT NULL,
   PRIMARY KEY (`orderID`, `OrderItem_orderItemID`),
