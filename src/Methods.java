@@ -57,7 +57,7 @@ public class Methods {
 
     // use case for logging a delivery
     public static void logDelivery(java.util.Date date, String items){
-
+        
     }
 
     // use case for logging a return
@@ -162,8 +162,7 @@ public class Methods {
 
         String sqlString = "SELECT * FROM supplier";
         supplierSize = myjdbc.returnData(sqlString).size();
-        newSupplierID = rand.nextInt(supplierSize + 1);
-        if (newSupplierID > 6){newSupplierID--;}
+        newSupplierID = rand.nextInt(supplierSize) + 1;
 
         sqlString = "INSERT INTO drug (name, category, stock, Supplier_supplierID)";
         sqlString += String.format(" VALUES('%s', '%s', %d, %d)", newName, newCategory, newStock, newSupplierID);
