@@ -11,10 +11,10 @@ public class Interface {
         /* The main frame the system will be displayed on.
         Other frames may be opened for other actions */
         JFrame mainFrame = new JFrame("Drug Inventory System");
-        mainFrame.setSize(1000, 1000);
+        mainFrame.setSize(550, 550);
         mainFrame.setLayout(new FlowLayout());
+        mainFrame.getContentPane().setBackground(Color.WHITE);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.setVisible(true);
 
         // add Log Drug button
         JButton logDrugButton = new JButton("Log Drug");
@@ -25,9 +25,6 @@ public class Interface {
             }
         });
 
-        //add logDrugButton to main frame
-        mainFrame.add(logDrugButton);
-
         // Add "Find Drug" button
         JButton findDrugButton = new JButton("Find Drug");
         findDrugButton.addActionListener(new ActionListener() {
@@ -36,9 +33,6 @@ public class Interface {
                 openFindDrugFrame();
             }
         });
-
-        // Add the findDrugButton to the main frame
-        mainFrame.add(findDrugButton);
 
         // Create a button for supplier button
         JButton supplierButton = new JButton("Supplier Actions");
@@ -49,9 +43,6 @@ public class Interface {
             }
         });
 
-        // Add the supplier button to the main frame
-        mainFrame.add(supplierButton);
-
         // Create a button for log actions
         JButton logButton = new JButton("Log Actions");
         logButton.addActionListener(new ActionListener(){
@@ -61,14 +52,50 @@ public class Interface {
             }
         });
 
-        // Add the log button to the main frame
-        mainFrame.add(logButton);
+        JButton reorderButton = new JButton("Reorder Drug");
+        reorderButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                openReorderFrame();
+            }
+        });
+
+        JTextArea notifArea = new JTextArea("No new notifications.");
+        notifArea.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        notifArea.setPreferredSize(new Dimension(400, 200));
+        notifArea.setBackground(Color.LIGHT_GRAY);
+        JPanel displayPanel = new JPanel();
+        displayPanel.setLayout(new GridLayout(1, 2, 5, 0));
+        displayPanel.add(notifArea);
+        displayPanel.setBackground(Color.WHITE);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout());
+        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.add(logDrugButton);
+        buttonPanel.add(new JLabel(" "));
+        buttonPanel.add(findDrugButton);
+        buttonPanel.add(new JLabel(" "));
+        buttonPanel.add(reorderButton);
+        buttonPanel.add(new JLabel(" "));
+        buttonPanel.add(supplierButton);
+        buttonPanel.add(new JLabel(" "));
+        buttonPanel.add(logButton);
+        buttonPanel.add(new JLabel(" "));
+        displayPanel.add(buttonPanel);
+        displayPanel.setPreferredSize(new Dimension(500, 300));
+        ImageIcon logoIcon = new ImageIcon("src//logo.jpg");
+        Image logoImage = logoIcon.getImage();
+        Image resizedLogo = logoImage.getScaledInstance(500, 125, Image.SCALE_SMOOTH);
+        JLabel logo = new JLabel(new ImageIcon(resizedLogo));
+        mainFrame.add(logo);
+        mainFrame.add(displayPanel);
+        mainFrame.setVisible(true);
     }
 
     // Method to open the "Find Drug" frame
     private void openFindDrugFrame() {
         JFrame findDrugFrame = new JFrame("Find Drug");
-        findDrugFrame.setSize(700, 500);
+        findDrugFrame.setSize(550, 350);
         findDrugFrame.setLayout(new BorderLayout());
         findDrugFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -90,6 +117,7 @@ public class Interface {
 
         // Text area for displaying results
         JTextArea resultArea = new JTextArea(15, 50);
+        resultArea.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         resultArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(resultArea);
 
@@ -132,22 +160,24 @@ public class Interface {
 
     // Implement the action after clicking on the supplier button
     private void openSupplierActionsFrame() {
-        JFrame supplierActionsFrame = new JFrame("Choose supplier actions");
-                supplierActionsFrame.setSize(700, 300);
+        JFrame supplierActionsFrame = new JFrame("Choose action");
+                supplierActionsFrame.setSize(300, 200);
                 supplierActionsFrame.setLayout(new BorderLayout());
                 supplierActionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
                 JPanel inputPanel = new JPanel();
-                inputPanel.setLayout(new FlowLayout());
+                inputPanel.setLayout(new GridLayout(4, 1, 0, 10));
 
                 // Create 3 buttons for the 3 use cases of supplier
                 JButton addSupplierButton = new JButton("Add a Supplier");
                 JButton removeSupplierButton = new JButton("Remove a Supplier");
                 JButton searchSupplierButton = new JButton("Search a Supplier");
+                JButton back = new JButton("Back");
 
                 inputPanel.add(addSupplierButton);
                 inputPanel.add(removeSupplierButton);
                 inputPanel.add(searchSupplierButton);
+                inputPanel.add(back);
 
                 addSupplierButton.addActionListener(new ActionListener() {
                     @Override
@@ -167,6 +197,12 @@ public class Interface {
                         openSearchSupplierFrame();
                     }
                 });
+                back.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent ae) {
+                        supplierActionsFrame.setVisible(false);
+                    }
+                });
             
                 supplierActionsFrame.add(inputPanel, BorderLayout.NORTH);
                 supplierActionsFrame.setVisible(true);
@@ -175,7 +211,7 @@ public class Interface {
     // Implement the action after clicking on the add supplier button
     private void openAddSupplierFrame() {
         JFrame addSupplierFrame = new JFrame("Add a Supplier");
-        addSupplierFrame.setSize(700, 300);
+        addSupplierFrame.setSize(400, 250);
         addSupplierFrame.setLayout(new FlowLayout());
         addSupplierFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
@@ -226,7 +262,7 @@ public class Interface {
     // Implement the action after clicking on the remove supplier button
     private void openRemoveSupplierFrame() {
         JFrame removeSupplierFrame = new JFrame("Remove a Supplier");
-        removeSupplierFrame.setSize(700, 300);
+        removeSupplierFrame.setSize(350, 225);
         removeSupplierFrame.setLayout(new FlowLayout());
         removeSupplierFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -273,7 +309,7 @@ public class Interface {
     // Implement the action after clicking on the search supplier button
     private void openSearchSupplierFrame() { 
         JFrame searchSupplierFrame = new JFrame("Search a Supplier");
-        searchSupplierFrame.setSize(700, 300);
+        searchSupplierFrame.setSize(500, 350);
         searchSupplierFrame.setLayout(new FlowLayout());
         searchSupplierFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
@@ -324,21 +360,23 @@ public class Interface {
     // Implement the action after clicking on the logs button
     private void openLogActionsFrame() {
         JFrame logActionsFrame = new JFrame("Choose log actions");
-        logActionsFrame.setSize(700, 300);
+        logActionsFrame.setSize(300, 200);
         logActionsFrame.setLayout(new BorderLayout());
         logActionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new FlowLayout());
+        inputPanel.setLayout(new GridLayout(4, 1, 0, 10));
 
         // Create 3 buttons for the 3 use cases of logs
         JButton logSaleButton = new JButton("Log a Sale");
         JButton logDeliveryButton = new JButton("Log a Delivery");
         JButton logReturnButton = new JButton("Log a Return");
+        JButton back = new JButton("Back");
 
         inputPanel.add(logSaleButton);
-        inputPanel.add(logDeliveryButton);
+        //inputPanel.add(logDeliveryButton); DID NOT YET IMPLEMENT
         inputPanel.add(logReturnButton);
+        inputPanel.add(back);
 
         logSaleButton.addActionListener(new ActionListener() {
             @Override
@@ -358,6 +396,12 @@ public class Interface {
                 openLogReturnFrame();
             }
         });     
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                logActionsFrame.setVisible(false);
+            }
+        });
 
         logActionsFrame.add(inputPanel, BorderLayout.NORTH);
         logActionsFrame.setVisible(true);
@@ -366,7 +410,7 @@ public class Interface {
     // Implement the action after clicking on the log sale button
     private void openLogSaleFrame() {
         JFrame logSaleFrame = new JFrame("Log a Sale");
-        logSaleFrame.setSize(700, 300);
+        logSaleFrame.setSize(500, 250);
         logSaleFrame.setLayout(new FlowLayout());
         logSaleFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             
@@ -404,7 +448,7 @@ public class Interface {
 
     private void openLogReturnFrame(){
         JFrame logReturnFrame = new JFrame("Log a Return");
-        logReturnFrame.setSize(700, 300);
+        logReturnFrame.setSize(500, 300);
         logReturnFrame.setLayout(new FlowLayout());
         logReturnFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -448,7 +492,7 @@ public class Interface {
     private void openLogDrugFrame() {
         //create the new window
         JFrame secondaryFrame = new JFrame("Log New Drug");
-        secondaryFrame.setSize(700, 700);
+        secondaryFrame.setSize(300, 300);
         secondaryFrame.setLayout(new FlowLayout());
         secondaryFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         secondaryFrame.setVisible(true);
@@ -456,6 +500,8 @@ public class Interface {
         //create a panel for necessary formatting
         JPanel formatPanel = new JPanel();
         formatPanel.setLayout(new BoxLayout(formatPanel, BoxLayout.PAGE_AXIS));
+        JPanel formatPanel2 = new JPanel();
+        formatPanel2.setLayout(new BoxLayout(formatPanel2, BoxLayout.LINE_AXIS));
 
         //create the labels and text fields for user to enter data
         JLabel drugNameLabel = new JLabel("Drug Name: ");
@@ -480,6 +526,9 @@ public class Interface {
                     try {
                         Methods.logDrug(drug);
                         JOptionPane.showMessageDialog(null, "Drug logged successfully!");
+                        if (drug.getStock() < 11) {
+                            JOptionPane.showMessageDialog(null, "Inventory of " + drug.getName() + " is low!");
+                        }
                     } catch (SQLException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -501,14 +550,80 @@ public class Interface {
         //add all the components to the panel
         formatPanel.add(drugNameLabel);
         formatPanel.add(drugNameField);
+        formatPanel.add(new JLabel(""));
         formatPanel.add(categoryLabel);
         formatPanel.add(categoryField);
+        formatPanel.add(new JLabel(""));
         formatPanel.add(stockLabel);
         formatPanel.add(stockField);
-        formatPanel.add(logButton);
-        formatPanel.add(cancelButton);
+        formatPanel.add(new JLabel(""));
+        formatPanel2.add(logButton);
+        formatPanel2.add(cancelButton);
         //add panel to the frame
         secondaryFrame.add(formatPanel);
+        secondaryFrame.add(formatPanel2);
+    }
+
+    private void openReorderFrame() {
+        JFrame secondaryFrame = new JFrame("Reorder Drug");
+        secondaryFrame.setSize(300, 300);
+        secondaryFrame.setLayout(new FlowLayout());
+        secondaryFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel formatPanel = new JPanel();
+        formatPanel.setLayout(new BoxLayout(formatPanel, BoxLayout.PAGE_AXIS));
+        JPanel formatPanel2 = new JPanel();
+        formatPanel2.setLayout(new BoxLayout(formatPanel2, BoxLayout.LINE_AXIS));
+
+        JLabel drugNameLabel = new JLabel("Drug Name: ");
+        JTextField drugNameField = new JTextField(30);
+        JLabel quantityLabel = new JLabel("Quantity: ");
+        JTextField quantityField = new JTextField(5);
+
+        //create button for user to log the new drug in the system
+        JButton reorderButton = new JButton("Reorder");
+        reorderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                //add code to check that all areas are filled in with information then
+                if(drugNameField.getText().isEmpty() || quantityField.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please fill in all fields.");
+                }
+ /*             else {
+                    //add code to create new drug object with the parameters set to the data entered
+                    Boolean bool = Methods.reorderedDrug(drugNameField.getText(), Integer.parseInt(quantityField.getText()));
+                    if(bool){
+                        JOptionPane.showMessageDialog(null, "Reordering " + quantityField.getText() + " units of " + drugNameField.getText() + ".");
+                        secondaryFrame.setVisible(false);
+                    }
+                    else
+                        JOptionPane.showMessageDialog(null, "Drug to reorder could not be found.");
+                } */
+            }
+        });
+
+        //create button for user to cancel the action and close window
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                secondaryFrame.setVisible(false);
+            }
+        });
+
+        //add all the components to the panel
+        formatPanel.add(drugNameLabel);
+        formatPanel.add(drugNameField);
+        formatPanel.add(new JLabel(""));
+        formatPanel.add(quantityLabel);
+        formatPanel.add(quantityField);
+        formatPanel.add(new JLabel(""));
+        formatPanel2.add(reorderButton);
+        formatPanel2.add(cancelButton);
+        //add panel to the frame
+        secondaryFrame.add(formatPanel);
+        secondaryFrame.add(formatPanel2);
+        secondaryFrame.setVisible(true);
     }
 
     public static void main(String[] args) {
